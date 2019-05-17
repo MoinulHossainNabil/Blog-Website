@@ -1,0 +1,14 @@
+# First load the template folder 
+# Create the django project \\django-admin startproject projectname
+# Inside that project Create static and template directories
+# Move all the html files to the template dir and all css files to the static dir
+# Now configure the settings,url,admin etc in a default way .
+  Don't forget to add the template dir in the template dir in settings.py file
+# Now create base.html
+# And create other related html files that are common like head.html, footer.html, scripts.html
+  and any other related and move the common tags into those files . Like all the header tags into the head.html
+  and so on .
+# Then structure the base.html file by including the common html files like head.html or other files
+  using {% include 'filename.html'%}
+  
+  conda env create -f environment
