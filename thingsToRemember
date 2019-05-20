@@ -1,3 +1,5 @@
+*** Dont create the app until you are done with the front end ***
+
 # First load the template folder 
 # Create the django project \\django-admin startproject projectname
 # Inside that project Create static and template directories
