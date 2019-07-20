@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "/home/bjit-542/anaconda3/envs/AnacondaVirtual/bin/python"
+    "python.pythonPath": "/home/bjit-542/anaconda3/envs/AnacondaVirtual/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }
