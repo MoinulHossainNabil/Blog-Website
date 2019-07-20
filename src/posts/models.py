@@ -8,7 +8,7 @@ class Author(models.Model):
     profile_pic = models.ImageField()
     
     def __str__(self):
-        return self.author
+        return str(self.author)
 
 class Category(models.Model):
     category_name = models.CharField(max_length= 100)
