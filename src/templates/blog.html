@@ -52,9 +52,9 @@
             <header>
               <h3 class="h6">Search the blog</h3>
             </header>
-            <form action="#" class="search-form">
+            <form action="{% url 'search_for_post' %}" class="search-form">
               <div class="form-group">
-                <input type="search" placeholder="What are you looking for?">
+                <input type="text" name = 'q' placeholder="What are you looking for?">
                 <button type="submit" class="submit"><i class="icon-search"></i></button>
               </div>
             </form>
@@ -84,11 +84,11 @@
             <header>
               <h3 class="h6">Categories</h3>
             </header>
-            <div class="item d-flex justify-content-between"><a href="#">Growth</a><span>12</span></div>
-            <div class="item d-flex justify-content-between"><a href="#">Local</a><span>25</span></div>
-            <div class="item d-flex justify-content-between"><a href="#">Sales</a><span>8</span></div>
-            <div class="item d-flex justify-content-between"><a href="#">Tips</a><span>17</span></div>
-            <div class="item d-flex justify-content-between"><a href="#">Local</a><span>25</span></div>
+            {% for cat in total_category %}
+            <div class="item d-flex justify-content-between">
+              <a href="#">{{cat.category__category_name}}</a><span>{{cat.category__count}}</span>
+            </div>
+            {% endfor %}
           </div>
           <!-- Widget [Tags Cloud Widget]-->
           <div class="widget tags">       
