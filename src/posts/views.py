@@ -2,6 +2,22 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 from posts.models import Posts, Category
 from marketing.models import SignUp
+from django.db.models import Count, Q
+
+def count_category():
+    total_category = Posts.objects.values('category__category_name').annotate(Count('category'))
+    return total_category
+
+def search_for_post(request):
+    post = Posts.objects.all()
+    searchkey = request.GET.get('q')
+    if searchkey:
+        post = post.filter(
+            Q(title__icontains = searchkey) |
+            Q(body__icontains = searchkey)
+        ).distinct()
+    return render(request, 'searched_post.html', {"post" : post})
+
 
 def index(request):
     posts = Posts.objects.filter(featured = True)
@@ -18,6 +34,7 @@ def index(request):
     return render(request,'index.html', contex)
     
 def blog(request):
+    total_category = count_category()
     posts = Posts.objects.all()
     latest = Posts.objects.order_by('upload_date')[:3]
     paginator = Paginator(posts, 1)
@@ -32,8 +49,10 @@ def blog(request):
 
     contex = {
         "queryset" : paginated_queryset,
-        "latest" : latest
+        "latest" : latest,
+        "total_category" : total_category
     }
+    print(total_category)
     return render(request,'blog.html', contex)
 
 def post(request, id):
