@@ -1,8 +1,9 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from posts.models import Posts, Category
 from marketing.models import SignUp
 from django.db.models import Count, Q
+from .forms import CommentForm
 
 def count_category():
     total_category = Posts.objects.values('category__category_name').annotate(Count('category'))
@@ -56,4 +57,20 @@ def blog(request):
     return render(request,'blog.html', contex)
 
 def post(request, id):
-    return render(request,'post.html',{})
+    total_category = count_category()
+    latest = Posts.objects.order_by('upload_date')[:3]
+    posts = get_object_or_404(Posts, id = id)
+    form = CommentForm(request.POST or None)
+    if request.method == "POST":
+        content = request.GET.get('usercomment')
+        if form.is_valid():
+            form.instance.user = request.user
+            form.instance.post = posts
+            form.save()
+    contex = {
+        "posts" : posts,
+        "latest" : latest,
+        "total_category" : total_category,
+        "form" : form
+    }
+    return render(request,'post.html', contex)
