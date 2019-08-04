@@ -1,3 +1,5 @@
+Bootstrap License
+
 ################################################################################################
 
 Documentation for Bootstrap Blog by Bootstrap Temple - https://bootstrapious.com
