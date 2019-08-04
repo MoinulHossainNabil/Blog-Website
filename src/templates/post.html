@@ -1,5 +1,6 @@
 
   {% extends 'base.html'%}
+  {% load crispy_forms_tags %}
   {% block content%}
   <style>
     .post-body img{
@@ -17,6 +18,10 @@
             <div class="post-single">
               <div class="post-thumbnail"><img src="{{posts.thmbnail.url}}" alt="..." class="img-fluid"></div>
               <div class="post-details">
+                <div>
+                  <a href="{% url 'post_update' id=posts.id %}">Update</a>
+                  <a href="{% url 'post_delete' id=posts.id %}">Dlelete</a>
+                </div>
                 <div class="post-meta d-flex justify-content-between">
                   {% for cat in posts.category.all %}
                   <div class="category">
@@ -30,7 +35,7 @@
                     <div class="title"><span>{{posts.post_author}}</span></div></a>
                   <div class="d-flex align-items-center flex-wrap">       
                     <div class="date"><i class="icon-clock"></i> {{posts.upload_date|timesince}} ago </div>
-                    <div class="views"><i class="icon-eye"></i> {{posts.view_count}}</div>
+                    <div class="views"><i class="icon-eye"></i> {{posts.count_viwes}}</div>
                     <div class="comments meta-last"><i class="icon-comment"></i>{{posts.comment}}</div>
                   </div>
                 </div>
@@ -79,19 +84,24 @@
                   <header>
                     <h3 class="h6">Leave a reply</h3>
                   </header>
+                  {{form.media}}
                   <form method="POST" action="." class="commenting-form">
                     {% csrf_token %}
                     <div class="row">
 
                       <div class="form-group col-md-12">
-                        {{ form }}
+                        {{ form|crispy }}
                       </div>
                       <div class="form-group col-md-12">
+                          <input type="text" name="comment" id="comment_id" placeholder="Leave a comment">
                         <button type="submit" class="btn btn-secondary">Submit Comment</button>
                       </div>
                     </div>
                   </form>
                 </div>
+                {% else %}
+                <a href="{% url 'account_login' %}" class="btn btn-secondary">Login to comment</a>
+
                 {% endif %}
                 
               </div>
