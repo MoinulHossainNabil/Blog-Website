@@ -7,19 +7,22 @@ from django.db.models import Count, Q
 from .forms import PostForm
 from django.urls import reverse
 
+
 def count_category():
     total_category = Posts.objects.values('category__category_name').annotate(Count('category'))
     return total_category
+
 
 def search_for_post(request):
     post = Posts.objects.all()
     searchkey = request.GET.get('q')
     if searchkey:
         post = post.filter(
-            Q(title__icontains = searchkey) |
-            Q(body__icontains = searchkey)
+            Q(title__icontains=searchkey) |
+            Q(body__icontains=searchkey)
         ).distinct()
-    return render(request, 'searched_post.html', {"post" : post})
+    return render(request, 'searched_post.html', {"post": post})
+
 
 def get_author(user):
     author = Author.objects.filter(author=user)
@@ -29,7 +32,7 @@ def get_author(user):
 
 
 def index(request):
-    posts = Posts.objects.filter(featured = True)
+    posts = Posts.objects.filter(featured=True)
     latest = Posts.objects.order_by('upload_date')[0:3]
     if request.method == "POST":
         email = request.POST.get("email")
@@ -37,11 +40,12 @@ def index(request):
         new_signup.email = email
         new_signup.save()
     contex = {
-        "posts" : posts,
-        "latest" : latest
+        "posts": posts,
+        "latest": latest
     }
-    return render(request,'index.html', contex)
-    
+    return render(request, 'index.html', contex)
+
+
 def blog(request):
     total_category = count_category()
     posts = Posts.objects.all()
@@ -55,23 +59,24 @@ def blog(request):
     except EmptyPage:
         paginated_queryset = paginator.page(paginator.num_pages)
 
-
     contex = {
-        "queryset" : paginated_queryset,
-        "latest" : latest,
-        "total_category" : total_category
+        "queryset": paginated_queryset,
+        "latest": latest,
+        "total_category": total_category
     }
     print(total_category)
-    return render(request,'blog.html', contex)
-#@login_required
+    return render(request, 'blog.html', contex)
+
+
+# @login_required
 def post(request, id):
     total_category = count_category()
     latest = Posts.objects.order_by('upload_date')[:3]
-    posts = get_object_or_404(Posts, pk = id)
+    posts = get_object_or_404(Posts, pk=id)
     if request.user.is_authenticated:
         author = get_author(request.user)
-        PostViewCount.objects.get_or_create(user = author, post=posts)
-    #form = CommentForm(request.POST or None)
+        PostViewCount.objects.get_or_create(user=author, post=posts)
+    # form = CommentForm(request.POST or None)
     if request.method == "POST":
         con = request.GET.get('comment')
         comment = Comments()
@@ -80,12 +85,13 @@ def post(request, id):
         comment.content = con
         comment.save()
     contex = {
-        "posts" : posts,
-        "latest" : latest,
-        "total_category" : total_category,
+        "posts": posts,
+        "latest": latest,
+        "total_category": total_category,
         # "form" : form
     }
-    return render(request,'post.html', contex)
+    return render(request, 'post.html', contex)
+
 
 def post_create(request):
     title = "Create"
@@ -106,12 +112,13 @@ def post_create(request):
     }
     return render(request, "post_create.html", context)
 
+
 def post_update(request, id):
     title = "Update"
     post = get_object_or_404(Posts, id=id)
     author = get_author(request.user)
     form = PostForm(request.POST or None, request.FILES or None, instance=post)
-    if request.method ==  "POST":
+    if request.method == "POST":
         if form.is_valid():
             form.instance.post_aurhor = author
             form.save()
@@ -126,11 +133,12 @@ def post_update(request, id):
     }
     return render(request, "post_create.html", context)
 
+
 def post_delete(request, id):
     post = get_object_or_404(Posts, id=id)
     post.delete()
     return redirect(reverse("blog_details"))
 
+
 def get_post(request, id):
     pass
-
